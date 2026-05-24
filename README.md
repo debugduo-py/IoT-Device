@@ -1,6 +1,3 @@
-# IoT-Device
-A repo for the IoT device used to send data to a server for records. Ideal for recording details of manufacturing of products, collecting records when selling items. All details sent to server by the IoT device.
-
 # IoT Data Collection Device
 
 A lightweight IoT data collection device built on the Raspberry Pi Zero W, featuring a custom hardware abstraction layer, smart server discovery, local backup, and a web-based monitoring dashboard.

@@ -79,13 +79,13 @@ Scanner.type("SUCCESS!")
 
 #### `getInput(text)`
 
-A hardware equivalent of Python's built-in `input()` function, tailored specifically for this IoT device. Displays a prompt on the LCD and waits for the user to type a number using the physical keypad. Supports backspace and escape.
+A hardware equivalent of Python's built-in `input()` function, tailored specifically for this IoT device. Displays a prompt on the LCD and waits for the user to type a number using the physical keypad. Supports backspace and enter.
 
 | Parameter | Type | Description |
 |---|---|---|
 | `text` | `str` | The prompt shown on the LCD before the user types |
 
-**Returns:** `int` — the number entered by the user, or `"escape"` if the user pressed the escape key.
+**Returns:** `int` — the number entered by the user.
 
 ```python
 qty = Scanner.getInput("Quantity: ")
@@ -109,9 +109,9 @@ Scanner.printf("1) Yes\r\n2) No")
 option = Scanner.get_selection()
 
 if option == 1:
-    # user selected yes
+    print("u seected Yes")
 elif option == 2:
-    # user selected no
+    print("u selected no")
 ```
 
 > Buttons 7 and 8 on the keypad are reserved for shutdown and restart confirmation menus respectively and are handled internally by this function.
@@ -151,19 +151,6 @@ Handles all data transmission, server discovery, and local backup management.
 
 Stores data locally in the device's MariaDB database when the server is unreachable. The data is saved alongside a timestamp so it can be sent to the server later when connectivity is restored.
 
-| Parameter | Type | Description |
-|---|---|---|
-| `data` | `str` | JSON string of the data to store |
-
-```python
-storeBackup(json.dumps({"machine_id": 3, "station_id": 7, "quantity": 150}))
-```
-
-**Database:** `backup`
-**Table:** `backups`
-**Columns:** `timestamp` (DATETIME), `data` (TEXT)
-
----
 
 #### `perform_network_scan()`
 
@@ -303,30 +290,7 @@ edit_details.deleteDetails()
 | Display | 16×4 I2C LCD (PCF8574 backpack) |
 | Input | 13-button GPIO keypad |
 | PCB | Hand-soldered dotted perfboard |
-| OS | Raspberry Pi OS Lite (heavily stripped) |
-
----
-
-## Dependencies
-
-```bash
-pip install RPi.GPIO RPLCD pymysql requests
-sudo apt install arp-scan
-```
-
----
-
-## Setup
-
-1. Enable I2C via `raspi-config`
-2. Set your station ID and machine ID using the device menu
-3. Connect to your network using the device menu
-4. Ensure the server is running and reachable on the local network
-5. Run:
-
-```bash
-sudo python3 main.py
-```
+| OS | sand OS |
 
 ---
 

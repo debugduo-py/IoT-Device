@@ -15,8 +15,7 @@ A lightweight IoT data collection device built on the Raspberry Pi Zero W, featu
 ├── sender.py          # Network, server discovery, data transmission
 ├── connect.py         # WiFi management
 ├── edit_details.py    # Device configuration
-├── station_id.txt     # Stores station ID
-├── machine_id.txt     # Stores machine ID
+├── details.json     # Stores station ID
 └── server_ip.txt      # Stores last known server IP
 ```
 

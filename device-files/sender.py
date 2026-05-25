@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 def storeBackup(data):
         try:
-                conn = pymysql.connect(host='localhost',user='pyuser',password='123456',database='backup')
+                conn = pymysql.connect(host='localhost',user='device',password='123456',database='backup')
 
                 cursor = conn.cursor()
 
@@ -29,7 +29,7 @@ valid_ips = []
 all_ips = []
 
 def perform_network_scan():
-    report = subprocess.getoutput("  | awk '{print $1}'").replace("WARNING: Cannot open MAC/Vendor file ieee-oui.txt: Permission denied", "").replace("WARNING: Cannot open MAC/Vendor file mac-vendor.txt: Permission denied","")
+    report = subprocess.getoutput(r"sudo nmap -sn --send-ip $(ip route | grep -v default | awk '{print $1}' | grep '/') -T4 | grep 'report for' | awk '{print $5}'")
 
     ip = ""
 
@@ -44,12 +44,14 @@ def perform_network_scan():
                     all_ips.append(ip)
                     ip = ""
     all_ips.append(ip)
+    print(all_ips)
 
 def check_ip(ip):
     global valid_ips, all_ips
     try:
+#        Scanner.printf(f"checking for {ip}")
         print(f"checking for {ip}")
-        response = requests.post(f"http://{ip}/iot/main.php", timeout=10)
+        response = requests.post(f"http://{ip}/iot/main.php", timeout=5)
 
         if "oui, je suis le server" in response.text:
             valid_ips.append(ip)
@@ -73,7 +75,7 @@ def findServer(scan_times):
 
                         print("read old ip")
 
-                        result = requests.post(f"http://{ip_old}/iot/main.php", timeout=10)
+                        result = requests.post(f"http://{ip_old}/iot/main.php", timeout=1)
 
                         print(f"curling ip {ip_old}")
                         if "oui, je suis le server" in result.text:
@@ -81,8 +83,7 @@ def findServer(scan_times):
                                 p = 1
                                 return ip_old
                 except Exception as e:
-                        print(f"Error: {e}")
-                        traceback.print_exc()
+                        pass
 
                 if p == 0:
 
@@ -145,11 +146,12 @@ def sendData():
                 # TO CHANGE DATA,...(in php file refer to the $table = (some stuff), that is also decorated with sm comments)
                 # -----------------------------------------------
 
-                with open("details.json","r") as f:
-                    details = json.load(f)
+                with open("machine_id.txt","r") as f:
+                        machine_id = f.read()
 
-                station_id = details["station_id"]
-                machine_id = details["machine_id"]
+                with open("station_id.txt","r") as f:
+                        station_id = f.read()
+
                 qty = Scanner.getInput("Quantity: ")
 
                 if qty != "escape":
@@ -203,8 +205,8 @@ def sendBackup():
         try:
 
                 ip = findServer(2)
-
-                conn = pymysql.connect(host='localhost',user='pyuser',password='123456',database='backup')
+	
+                conn = pymysql.connect(host='localhost',user='device',password='123456',database='backup')
                 cursor = conn.cursor()
 
                 cursor.execute("select * from backups")

@@ -12,11 +12,10 @@ def editDetails():
 
         send = 0
 
-        with open("details.json","r") as f:
-            details = json.load(f)
+        with open("station_id.txt","r") as f:
+            station_id = int(f.read().replace("\n","").replace(" ",""))
 
-        station_id = details["station_id"]
-        machine_id = details["machine_id"]
+        # print(station_id)
 
         option = 0
 
@@ -36,6 +35,9 @@ def editDetails():
             elif option == 2:
                 pass
 
+        with open("machine_id.txt","r") as f:
+            machine_id = int(f.read().replace("\n","").replace(" ",""))
+
         Scanner.printf(f"Machine id:{machine_id}\r\n  \r\n1) Change\r\n2) Don't Change")
 
         while 1:
@@ -51,9 +53,11 @@ def editDetails():
         elif option == 2:
             pass
 
+        with open("machine_id.txt","r") as f:
+            machine_id_old = f.read()
 
-        machine_id_old = details["machine_id"]
-        station_id_old = details["station_id"]
+        with open("station_id.txt","r") as f:
+            station_id_old = f.read()
 
         text = {
 
@@ -83,16 +87,13 @@ def editDetails():
             if "success" in response.text:
                 print("Server sent success")
 
-                data = {
+                with open("station_id.txt","w") as f:
+                    f.write(f"{station_id}")
 
-                "machine_id":machine_id,
-                "station_id":station_id
+                print("wrote data in station id")
 
-                }
-
-                with open("details.json","w") as f:
-                    f.write(json.dumps(data))
-
+                with open("machine_id.txt","w") as f:
+                    f.write(f"{machine_id}")
 
                 print("wrote data in machine id")
 
@@ -121,21 +122,18 @@ def deleteDetails():
 
         send = 0
 
-        with open("details.json","r") as f:
-            details = json.load(f)
+        with open("station_id.txt","r") as f:
+            station_id = int(f.read().replace("\n","").replace(" ",""))
 
-        station_id = details["station_id"]
-        machine_id = details["machine_id"]
+        with open("station_id.txt","w") as f:
+            f.write("0")
 
-        data = {
+        with open("machine_id.txt","r") as f:
+            machine_id = int(f.read().replace("\n","").replace(" ",""))
 
-        "station_id":0,
-        "machine_id":0
+        with open("machine_id.txt","w") as f:
+            f.write("0")
 
-        }
-
-        with open("details.json","w") as f:
-            f.write(json.dumps(data))
 
         text = {
 
@@ -156,7 +154,7 @@ def deleteDetails():
 
         try:
             print("Sent data")
-            response = requests.post(f"http://{ip}/devices.php", data={"removal": data}, timeout=5)
+            response = requests.post(f"http://{ip}/iot/devices.php", data={"removal": data}, timeout=5)
             print(response.text)
             if "success" in response.text:
                 print("Server sent success")

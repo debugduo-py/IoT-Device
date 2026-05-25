@@ -6,7 +6,6 @@ import edit_details
 import sender
 import connect
 import traceback
-import json
 
 try:
 
@@ -44,7 +43,6 @@ try:
                 option1 = Scanner.get_selection()
 
                 if option1 == 1:
-                    Scanner.printf("Loading...")
                     connect.Networks()
                 elif option1 == 2:
                     sender.findServer(1)
@@ -56,14 +54,11 @@ try:
         elif option == 3:
             sender.sendBackup()
         elif option == 4:
-            with open("details.json","r") as f:
-                details = json.load(f)
+            mid = ""
+            with open("machine_id.txt","r") as f:
+                mid = int(f.read())
 
-            station_id = details["station_id"]
-            machine_id = details["machine_id"]
-
-
-            if station_id != 0 and machine_id != 0:
+            if mid != 0:
                 sender.sendData()
             else:
                 Scanner.printf("Details not \r\nset!")

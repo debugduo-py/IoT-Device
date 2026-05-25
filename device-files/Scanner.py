@@ -46,7 +46,15 @@ def printf(text):
         print(f"Error: {e}")
         traceback.print_exc()
 
- 
+def showOS_branding():
+    lcd.cursor_mode = 'blink'  # Blinking block cursor
+
+    lcd.cursor_pos = (0,2)
+    text = "Saeed"
+
+    for i in range(len(text)):
+            lcd.write_string(text[i])
+            time.sleep(0.1)
 
 
 
@@ -164,13 +172,12 @@ def get_selection():
                             displayOff()
                             edit_details.deleteDetails()
                             pins.cleanup()
-                            printf("Let the Pi LED \r\n stop blinking\r\n.Don't unplug if\r\n it's still blinking!")
+
                             os.system("sudo shutdown now")
 
                         elif opt == 2:
                             m = 1
-
-                        break
+                            break
 
                     elif i == 7:
                         print("supposed to restart")
